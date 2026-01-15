@@ -68,10 +68,6 @@ st.markdown(
         box-shadow: 0 0 0 1px #4F46E5;
     }
     
-    /* Hide Streamlit Elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    
     .stToolbarActions {
         visibility: hidden;
     }
