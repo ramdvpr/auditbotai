@@ -109,14 +109,55 @@ class Styles:
     /* Hide Streamlit Branding Elements */
     /* Hide "Deploy" badge */
     [class*="_viewerBadge_"] {
-        display: hidden;
+        display: none !important;
     }
     
     /* Hide App Creator Avatar */
     [class*="_profileContainer_"] {
-        display: hidden;
+        display: none !important;
     }
     </style>
+    
+    <script>
+    // Function to remove Streamlit branding elements
+    function removeStreamlitBranding() {
+        // Remove viewer badge (Deploy button)
+        const viewerBadges = document.querySelectorAll('[class*="_viewerBadge_"]');
+        viewerBadges.forEach(badge => {
+            if (badge && badge.parentElement) {
+                badge.parentElement.removeChild(badge);
+            }
+        });
+        
+        // Remove profile container (App Creator Avatar)
+        const profileContainers = document.querySelectorAll('[class*="_profileContainer_"]');
+        profileContainers.forEach(container => {
+            if (container && container.parentElement) {
+                container.parentElement.removeChild(container);
+            }
+        });
+    }
+    
+    // Run immediately
+    removeStreamlitBranding();
+    
+    // Run after a short delay to catch dynamically loaded elements
+    setTimeout(removeStreamlitBranding, 500);
+    setTimeout(removeStreamlitBranding, 1000);
+    setTimeout(removeStreamlitBranding, 2000);
+    setTimeout(removeStreamlitBranding, 4000);
+    
+    // Use MutationObserver to catch elements added later
+    const observer = new MutationObserver(function(mutations) {
+        removeStreamlitBranding();
+    });
+    
+    // Start observing the document with the configured parameters
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    </script>
 """
 
     @classmethod
