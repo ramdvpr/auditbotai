@@ -103,18 +103,18 @@ class Styles:
     
     /* Hide Toolbar */
     .stToolbarActions {
-        visibility: none !important;
+        visibility: hidden;
     }
     
     /* Hide Streamlit Branding Elements */
     /* Hide "Deploy" badge */
     [class*="_viewerBadge_"] {
-        display: none !important;
+        display: hidden;
     }
     
     /* Hide App Creator Avatar */
     [class*="_profileContainer_"] {
-        display: none !important;
+        display: hidden;
     }
     </style>
 """
