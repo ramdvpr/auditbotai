@@ -3,6 +3,7 @@ CSS styles for the Audit Bot AI application.
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 class Styles:
@@ -117,50 +118,64 @@ class Styles:
         display: none !important;
     }
     </style>
-    
-    <script>
-    // Function to remove Streamlit branding elements
-    function removeStreamlitBranding() {
-        // Remove viewer badge (Deploy button)
-        const viewerBadges = document.querySelectorAll('[class*="_viewerBadge_"]');
-        viewerBadges.forEach(badge => {
-            if (badge && badge.parentElement) {
-                badge.parentElement.removeChild(badge);
-            }
-        });
-        
-        // Remove profile container (App Creator Avatar)
-        const profileContainers = document.querySelectorAll('[class*="_profileContainer_"]');
-        profileContainers.forEach(container => {
-            if (container && container.parentElement) {
-                container.parentElement.removeChild(container);
-            }
-        });
-    }
-    
-    // Run immediately
-    removeStreamlitBranding();
-    
-    // Run after a short delay to catch dynamically loaded elements
-    setTimeout(removeStreamlitBranding, 500);
-    setTimeout(removeStreamlitBranding, 1000);
-    setTimeout(removeStreamlitBranding, 2000);
-    setTimeout(removeStreamlitBranding, 4000);
-    
-    // Use MutationObserver to catch elements added later
-    const observer = new MutationObserver(function(mutations) {
-        removeStreamlitBranding();
-    });
-    
-    // Start observing the document with the configured parameters
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-    </script>
 """
+
+    @staticmethod
+    def inject_branding_removal_script() -> None:
+        """Inject JavaScript to remove Streamlit branding elements using components.html()."""
+        components.html(
+            """
+            <script>
+            // Function to remove Streamlit branding elements
+            function removeStreamlitBranding() {
+                // Get parent window's document
+                const parentDoc = window.parent.document;
+                
+                // Remove viewer badge (Deploy button)
+                const viewerBadges = parentDoc.querySelectorAll('[class*="_viewerBadge_"]');
+                viewerBadges.forEach(badge => {
+                    if (badge && badge.parentElement) {
+                        badge.parentElement.removeChild(badge);
+                    }
+                });
+                
+                // Remove profile container (App Creator Avatar)
+                const profileContainers = parentDoc.querySelectorAll('[class*="_profileContainer_"]');
+                profileContainers.forEach(container => {
+                    if (container && container.parentElement) {
+                        container.parentElement.removeChild(container);
+                    }
+                });
+            }
+            
+            // Run immediately
+            removeStreamlitBranding();
+            
+            // Run after delays to catch dynamically loaded elements
+            setTimeout(removeStreamlitBranding, 100);
+            setTimeout(removeStreamlitBranding, 500);
+            setTimeout(removeStreamlitBranding, 1000);
+            setTimeout(removeStreamlitBranding, 2000);
+            setTimeout(removeStreamlitBranding, 4000);
+            
+            // Use MutationObserver to catch elements added later
+            const parentDoc = window.parent.document;
+            const observer = new MutationObserver(function(mutations) {
+                removeStreamlitBranding();
+            });
+            
+            // Start observing the parent document
+            observer.observe(parentDoc.body, {
+                childList: true,
+                subtree: true
+            });
+            </script>
+            """,
+            height=0,
+        )
 
     @classmethod
     def apply(cls) -> None:
-        """Apply all CSS styles to the Streamlit app."""
+        """Apply all CSS styles and JavaScript to the Streamlit app."""
         st.markdown(cls.get_main_css(), unsafe_allow_html=True)
+        cls.inject_branding_removal_script()
