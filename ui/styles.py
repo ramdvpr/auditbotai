@@ -71,11 +71,6 @@ class Styles:
         box-shadow: 0 0 0 1px #4F46E5;
     }
     
-    /* Hide Toolbar */
-    .stToolbarActions {
-        visibility: hidden;
-    }
-    
     /* Suggested Message Button Styling */
     .suggested-btn {
         background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(147, 51, 234, 0.2));
@@ -104,6 +99,22 @@ class Styles:
     
     section[data-testid="stSidebar"] .stSelectbox label {
         color: #A1A1AA;
+    }
+    
+    /* Hide Toolbar */
+    .stToolbarActions {
+        visibility: none !important;
+    }
+    
+    /* Hide Streamlit Branding Elements */
+    /* Hide "Deploy" badge */
+    [class*="_viewerBadge_"] {
+        display: none !important;
+    }
+    
+    /* Hide App Creator Avatar */
+    [class*="_profileContainer_"] {
+        display: none !important;
     }
     </style>
 """
