@@ -110,24 +110,32 @@ class Styles:
         components.html(
             """
             <script>
-            // Function to remove Streamlit branding elements
+            // Function to remove Streamlit branding elements from parent document
             function removeStreamlitBranding() {
-                // Remove header
-                document.querySelectorAll(".stToolbarActions").forEach(el => el.remove());
-                
-                // Remove footer streamlit icon
-                var link = document.querySelector('a[href="https://streamlit.io/cloud"]');
-                if (link) {
-                    link.remove();
+                try {
+                    // Access parent document (outside the iframe)
+                    const parentDoc = window.parent.document;
+                    
+                    // Remove toolbar actions
+                    parentDoc.querySelectorAll(".stToolbarActions").forEach(el => el.remove());
+                    
+                    // Remove Deploy badge / viewer badge
+                    parentDoc.querySelectorAll('[class*="_viewerBadge_"]').forEach(el => el.remove());
+                    parentDoc.querySelectorAll('a[href="https://streamlit.io/cloud"]').forEach(el => el.remove());
+                    
+                    // Remove profile container / app creator avatar
+                    parentDoc.querySelectorAll('[class*="_profileContainer_"]').forEach(el => el.remove());
+                    
+                    // Remove by specific user profile link
+                    const profileLink = parentDoc.querySelector('a[href^="https://share.streamlit.io/user/"]');
+                    if (profileLink) {
+                        const container = profileLink.parentElement?.parentElement;
+                        if (container) container.remove();
+                    }
+                } catch (e) {
+                    // Cross-origin errors are expected in some environments
+                    console.log('Branding removal:', e.message);
                 }
-                
-                // Remove footer streamlit user profile
-                var link = document.querySelector('a[href^="https://share.streamlit.io/user/ramdvpr"]');
-                var twoLevelsUp = link?.parentElement?.parentElement;
-                if (twoLevelsUp) {
-                    twoLevelsUp.remove();
-                }
-                alert("in");
             }
             
             // Run immediately
@@ -141,16 +149,20 @@ class Styles:
             setTimeout(removeStreamlitBranding, 4000);
             
             // Use MutationObserver to catch elements added later
-            const parentDoc = window.parent.document;
-            const observer = new MutationObserver(function(mutations) {
-                removeStreamlitBranding();
-            });
-            
-            // Start observing the parent document
-            observer.observe(parentDoc.body, {
-                childList: true,
-                subtree: true
-            });
+            try {
+                const parentDoc = window.parent.document;
+                const observer = new MutationObserver(function(mutations) {
+                    removeStreamlitBranding();
+                });
+                
+                // Start observing the parent document
+                observer.observe(parentDoc.body, {
+                    childList: true,
+                    subtree: true
+                });
+            } catch (e) {
+                console.log('MutationObserver setup:', e.message);
+            }
             </script>
             """,
             height=0,
