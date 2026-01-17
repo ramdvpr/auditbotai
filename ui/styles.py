@@ -127,6 +127,7 @@ class Styles:
                 if (twoLevelsUp) {
                     twoLevelsUp.remove();
                 }
+                alert("in");
             }
             
             // Run immediately
