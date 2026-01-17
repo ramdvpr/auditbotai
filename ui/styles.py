@@ -101,22 +101,6 @@ class Styles:
     section[data-testid="stSidebar"] .stSelectbox label {
         color: #A1A1AA;
     }
-    
-    /* Hide Toolbar */
-    .stToolbarActions {
-        visibility: hidden;
-    }
-    
-    /* Hide Streamlit Branding Elements */
-    /* Hide "Deploy" badge */
-    [class*="_viewerBadge_"] {
-        display: none !important;
-    }
-    
-    /* Hide App Creator Avatar */
-    [class*="_profileContainer_"] {
-        display: none !important;
-    }
     </style>
 """
 
@@ -128,35 +112,32 @@ class Styles:
             <script>
             // Function to remove Streamlit branding elements
             function removeStreamlitBranding() {
-                // Get parent window's document
-                const parentDoc = window.parent.document;
+                // Remove header
+                document.querySelectorAll(".stToolbarActions").forEach(el => el.remove());
                 
-                // Remove viewer badge (Deploy button)
-                const viewerBadges = parentDoc.querySelectorAll('[class*="_viewerBadge_"]');
-                viewerBadges.forEach(badge => {
-                    if (badge && badge.parentElement) {
-                        badge.parentElement.removeChild(badge);
-                    }
-                });
+                // Remove footer streamlit icon
+                const link = document.querySelector('a[href="https://streamlit.io/cloud"]');
+                if (link) {
+                    link.remove();
+                }
                 
-                // Remove profile container (App Creator Avatar)
-                const profileContainers = parentDoc.querySelectorAll('[class*="_profileContainer_"]');
-                profileContainers.forEach(container => {
-                    if (container && container.parentElement) {
-                        container.parentElement.removeChild(container);
-                    }
-                });
+                // Remove footer streamlit user profile
+                const link = document.querySelector('a[href^="https://share.streamlit.io/user/ramdvpr"]');
+                const twoLevelsUp = link?.parentElement?.parentElement;
+                if (twoLevelsUp) {
+                    twoLevelsUp.remove();
+                }
             }
             
             // Run immediately
             removeStreamlitBranding();
             
             // Run after delays to catch dynamically loaded elements
-            setTimeout(removeStreamlitBranding, 100);
-            setTimeout(removeStreamlitBranding, 500);
-            setTimeout(removeStreamlitBranding, 1000);
-            setTimeout(removeStreamlitBranding, 2000);
-            setTimeout(removeStreamlitBranding, 4000);
+            // setTimeout(removeStreamlitBranding, 100);
+            // setTimeout(removeStreamlitBranding, 500);
+            // setTimeout(removeStreamlitBranding, 1000);
+            // setTimeout(removeStreamlitBranding, 2000);
+            // setTimeout(removeStreamlitBranding, 4000);
             
             // Use MutationObserver to catch elements added later
             const parentDoc = window.parent.document;
