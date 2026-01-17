@@ -32,4 +32,6 @@ env/
 # Streamlit
 .streamlit/secrets.toml
 
-License_Summary.xlsx
+documents/
+
+.idea
