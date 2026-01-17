@@ -115,46 +115,7 @@ class Styles:
         components.html(
             """
             <script>
-            // Function to remove Streamlit branding elements
-            function removeStreamlitBranding() {
-                // Remove header
-                document.querySelectorAll(".stToolbarActions").forEach(el => el.remove());
-                
-                // Remove footer streamlit icon
-                // var link = document.querySelector('a[href="https://streamlit.io/cloud"]');
-                // if (link) {
-                    // link.remove();
-                // }
-                
-                // Remove footer streamlit user profile
-                // var link = document.querySelector('a[href^="https://share.streamlit.io/user/ramdvpr"]');
-                // var twoLevelsUp = link?.parentElement?.parentElement;
-                // if (twoLevelsUp) {
-                    // twoLevelsUp.remove();
-                // }
-            }
-            
-            // Run immediately
-            removeStreamlitBranding();
-            
-            // Run after delays to catch dynamically loaded elements
-            setTimeout(removeStreamlitBranding, 100);
-            setTimeout(removeStreamlitBranding, 500);
-            setTimeout(removeStreamlitBranding, 1000);
-            setTimeout(removeStreamlitBranding, 2000);
-            setTimeout(removeStreamlitBranding, 5000);
-            
-            // Use MutationObserver to catch elements added later
-            const parentDoc = window.parent.document;
-            const observer = new MutationObserver(function(mutations) {
-                removeStreamlitBranding();
-            });
-            
-            // Start observing the parent document
-            observer.observe(parentDoc.body, {
-                childList: true,
-                subtree: true
-            });
+            // Functions
             </script>
             """,
             height=0,
@@ -164,4 +125,4 @@ class Styles:
     def apply(cls) -> None:
         """Apply all CSS styles and JavaScript to the Streamlit app."""
         st.markdown(cls.get_main_css(), unsafe_allow_html=True)
-        cls.inject_branding_removal_script()
+        # cls.inject_branding_removal_script()
