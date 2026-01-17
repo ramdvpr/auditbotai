@@ -133,11 +133,11 @@ class Styles:
             removeStreamlitBranding();
             
             // Run after delays to catch dynamically loaded elements
-            // setTimeout(removeStreamlitBranding, 100);
-            // setTimeout(removeStreamlitBranding, 500);
-            // setTimeout(removeStreamlitBranding, 1000);
-            // setTimeout(removeStreamlitBranding, 2000);
-            // setTimeout(removeStreamlitBranding, 4000);
+            setTimeout(removeStreamlitBranding, 100);
+            setTimeout(removeStreamlitBranding, 500);
+            setTimeout(removeStreamlitBranding, 1000);
+            setTimeout(removeStreamlitBranding, 2000);
+            setTimeout(removeStreamlitBranding, 4000);
             
             // Use MutationObserver to catch elements added later
             const parentDoc = window.parent.document;
