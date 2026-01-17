@@ -98,6 +98,17 @@ class Styles:
         background-color: #161B22;
     }
     
+    /* Wider sidebar only on desktop screens when expanded */
+    @media (min-width: 768px) {
+        section[data-testid="stSidebar"][aria-expanded="true"] {
+            min-width: 320px !important;
+        }
+        
+        section[data-testid="stSidebar"][aria-expanded="true"] > div {
+            width: 320px !important;
+        }
+    }
+    
     section[data-testid="stSidebar"] .stSelectbox label {
         color: #A1A1AA;
     }
