@@ -32,6 +32,4 @@ env/
 # Streamlit
 .streamlit/secrets.toml
 
-documents/
-
 .idea

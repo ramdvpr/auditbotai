@@ -1,5 +1,8 @@
 import streamlit as st
-from openai import OpenAI
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+
+OPENAI_MODEL = "gpt-4o-mini"
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -98,7 +101,7 @@ rows = [
 ]
 """
 
-# --- OpenAI Configuration ---
+# --- LangChain Configuration ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -123,14 +126,20 @@ INSTRUCTIONS:
 
 # --- Chat Logic ---
 
-# Initialize OpenAI Client
+# Initialize LangChain Chat Model
 # Expects OPENAI_API_KEY in .streamlit/secrets.toml
-try:
-    client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-except Exception:
+if "OPENAI_API_KEY" not in st.secrets:
     st.error(
         "OpenAI API Key not found. Please set `OPENAI_API_KEY` in `.streamlit/secrets.toml`."
     )
+    st.stop()
+
+try:
+    llm = ChatOpenAI(
+        model=OPENAI_MODEL, api_key=st.secrets["OPENAI_API_KEY"], streaming=True
+    )
+except Exception as e:
+    st.error(f"Error initializing LangChain: {e}")
     st.stop()
 
 # Display Chat History
@@ -150,28 +159,38 @@ if prompt := st.chat_input("Ask about your SAP License Summary..."):
         message_placeholder = st.empty()
         full_response = ""
 
-        # Prepare messages for API
-        api_messages = [{"role": "system", "content": system_prompt}] + [
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.messages
-        ]
+        # Show "Thinking..." immediately
+        message_placeholder.markdown("_Thinking..._")
+
+        # Prepare messages using LangChain message objects
+        messages = [SystemMessage(content=system_prompt)]
+
+        # Convert session state messages to LangChain message objects
+        for m in st.session_state.messages:
+            if m["role"] == "user":
+                messages.append(HumanMessage(content=m["content"]))
+            elif m["role"] == "assistant":
+                messages.append(AIMessage(content=m["content"]))
 
         try:
-            stream = client.chat.completions.create(
-                model="gpt-4.1-mini",
-                messages=api_messages,
-                stream=True,
-            )
+            # Stream the response directly from LLM
+            stream = llm.stream(messages)
 
             for chunk in stream:
-                if chunk.choices[0].delta.content is not None:
-                    full_response += chunk.choices[0].delta.content
+                # Extract content from AIMessageChunk
+                if hasattr(chunk, "content"):
+                    full_response += chunk.content
                     message_placeholder.markdown(full_response + "▌")
 
             message_placeholder.markdown(full_response)
+        except ValueError as e:
+            st.error(f"Configuration error: {e}")
+            full_response = (
+                "I encountered a configuration error. Please check your API settings."
+            )
         except Exception as e:
             st.error(f"Error generating response: {e}")
-            full_response = "I encountered an error while processing your request. Please check your API configuration."
+            full_response = "I encountered an error while processing your request. Please try again."
 
     # Add assistant response to history
     st.session_state.messages.append({"role": "assistant", "content": full_response})

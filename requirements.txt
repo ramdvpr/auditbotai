@@ -1,2 +1,6 @@
 streamlit==1.52.2
 openai==2.15.0
+langchain
+langchain-community
+langchain-openai
+langchain-experimental==0.4.1
