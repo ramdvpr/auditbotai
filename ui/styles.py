@@ -116,14 +116,14 @@ class Styles:
                 document.querySelectorAll(".stToolbarActions").forEach(el => el.remove());
                 
                 // Remove footer streamlit icon
-                const link = document.querySelector('a[href="https://streamlit.io/cloud"]');
+                var link = document.querySelector('a[href="https://streamlit.io/cloud"]');
                 if (link) {
                     link.remove();
                 }
                 
                 // Remove footer streamlit user profile
-                const link = document.querySelector('a[href^="https://share.streamlit.io/user/ramdvpr"]');
-                const twoLevelsUp = link?.parentElement?.parentElement;
+                var link = document.querySelector('a[href^="https://share.streamlit.io/user/ramdvpr"]');
+                var twoLevelsUp = link?.parentElement?.parentElement;
                 if (twoLevelsUp) {
                     twoLevelsUp.remove();
                 }
