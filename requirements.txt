@@ -4,3 +4,6 @@ langchain
 langchain-community
 langchain-openai
 langchain-experimental==0.4.1
+pandas
+openpyxl
+tabulate
